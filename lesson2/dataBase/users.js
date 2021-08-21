@@ -1,0 +1,1 @@
+module.exports = [{"email":"test1@gmail.com","password":"12345"},{"email":"test2@gmail.com","password":"Pa$$w0rd"},{"email":"test3@gmail.com","password":"Pa$$w0rd"},{"email":"test4@gmail.com","password":"Pa$$w0rd"},{"email":"test66@gmail.com","password":"12345"},{"email":"1212211","password":"3"}]
