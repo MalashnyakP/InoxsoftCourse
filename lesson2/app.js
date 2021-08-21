@@ -21,21 +21,9 @@ app.set('view engine', '.hbs');
 app.engine('.hbs', expressHbs({ defaultLayout: false }));
 app.set('views', staticPath);
 
-app.get('/users', (req, res) => {
-    res.json(users);
-});
-
-app.get('/users/:user_id', (req, res) => {
-    const { user_id } = req.params;
-    const query = req.query;
-
-    res.json(users[user_id]);
-});
-
 app.post('/auth', (req, res) => {
     const { email, password } = req.body;
 
-    console.log(email, password)
     const user = users.find(user => user.email === email);
 
     if (!user) {
@@ -43,41 +31,58 @@ app.post('/auth', (req, res) => {
         return;
     }
 
-    //res.redirect('/users/2')
-
-    res.json(user);
-});
-
-app.get('/auth', (req, res) => {
-    res.render('auth');
+    res.render('userCabinet', {name: '', email, password});
 });
 
 app.post('/signup', (req, res) => {
-    const { email, password } = req.body;
+    const { name, email, password } = req.body;
     const emailValidator = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    console.log(emailValidator.test(email), email)
     if(!emailValidator.test(email)){
-        res.status(statusCodes.BAD_REQUEST).end('Enter valid email');
+        res.status(statusCodes.BAD_REQUEST).end('Enter valid email.');
+        return;
+    }
+
+    if(password.length < 5){
+        res.status(statusCodes.BAD_REQUEST).end('Enter valid password. Minimun length 5 characters.');
+        return;
     }
  
-    console.log(email, password)
     const user = users.find(user => user.email === email);
 
     if(!user){
-        users.push({email, password});
+        users.push({name, email, password});
         const usersJSON = 'module.exports = ' + JSON.stringify(users);         
         writeFilePromisify(dbPath, usersJSON);
-        res.redirect('/users');
+        res.render('userCabinet', {name, email, password});
         return;
     }
 
     res.status(statusCodes.CONFLICT).end('User with thie email already exists');
 });
 
+app.get('/users/:user_id', (req, res) => {
+    const { user_id } = req.params;
+
+    res.render('userCabinet', {name: users[user_id].name, email: users[user_id].email, password: users[user_id].password});
+});
+
 app.get('/signup', (req, res) => {
     res.render('signup');
 });
 
+app.get('/auth', (req, res) => {
+    res.render('auth');
+});
+
+app.get('/userCabinet', (req, res) => {
+    res.render('userCabinet');
+});
+
+app.get('/users', (req, res) => {
+    res.render('users', { users });
+});
+
 app.listen(PORT, () => {
+    console.log('Listening to 5000');
 });

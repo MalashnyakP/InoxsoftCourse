@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>Sign up</title>
+    <title>Users info</title>
 </head>
 <body>
 
-<form action="/signup" method="post">
-    <input type="text" name="name">
-    <input type="text" name="email">
-    <input type="text" name="password">
-    <input type="submit" value="Send">
-</form>
+{{#each users}}    
+    {{#if this.name}}
+    <h2>Name: {{this.name}}</h2>   
+    {{/if}}
+    <h2>Email: {{this.email}}</h2>
+    <h2>Password: {{this.password}}</h2>
+    <hr>
+{{/each}}
 
 </body>
 </html>
