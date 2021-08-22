@@ -4,13 +4,14 @@ const fs = require('fs');
 const path = require('path');
 const util = require('util');
 
-const statusCodes = require('./configs/statusCodesENUM');
+const { emailValidator } = require('./helper/emailValidator');
 const { PORT } = require('./configs/config');
-const users = require('./dataBase/users');
+const statusCodes = require('./configs/statusCodesENUM');
+const users = require('./dataBase/users.json');
 
 const app = express();
 const staticPath = path.join(__dirname, 'static');
-const dbPath = path.join(__dirname, 'dataBase', 'users.js');
+const dbPath = path.join(__dirname, 'dataBase', 'users.json');
 
 const writeFilePromisify = util.promisify(fs.writeFile);
 
@@ -24,59 +25,77 @@ app.set('views', staticPath);
 app.post('/auth', (req, res) => {
     const { email, password } = req.body;
 
-    const user = users.find(user => user.email === email);
-
-    if (!user) {
-        res.status(statusCodes.NOT_FOUND).end('User not found');
+    if(!emailValidator(email)){
+        res.redirect('/auth?badEmailMsg=Enter valid email.');
         return;
     }
 
-    res.render('userCabinet', {name: '', email, password});
+    const user = users.find(user => user.email === email);
+    
+    if (!user) {
+        res.redirect('/signup?userMsg=User not found. Try to sign up.');
+        return;
+    }
+
+    if(user.password !== password){
+        res.redirect('/auth?badPasswordMsg=Wrong password.');
+        return;
+    }
+
+    res.redirect('/userCabinet?id=' + user.id + '&name=' + user.name + '&email=' + user.email + '&password=' + user.password); 
 });
 
 app.post('/signup', (req, res) => {
     const { name, email, password } = req.body;
-    const emailValidator = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if(!emailValidator.test(email)){
-        res.status(statusCodes.BAD_REQUEST).end('Enter valid email.');
+    
+    if(!emailValidator(email)){
+        res.redirect('/signup?badEmailMsg=Enter valid email.');        
         return;
     }
 
     if(password.length < 5){
-        res.status(statusCodes.BAD_REQUEST).end('Enter valid password. Minimun length 5 characters.');
+        res.redirect('/signup?badPasswordMsg=Enter valid password. Minimun length 5 characters.'); 
         return;
     }
  
     const user = users.find(user => user.email === email);
 
     if(!user){
-        users.push({name, email, password});
-        const usersJSON = 'module.exports = ' + JSON.stringify(users);         
+        users.push({id: users.length + 1, name, email, password});
+       
+        const usersJSON = JSON.stringify(users);         
         writeFilePromisify(dbPath, usersJSON);
-        res.render('userCabinet', {name, email, password});
+        
+        res.redirect('auth');      
         return;
     }
 
-    res.status(statusCodes.CONFLICT).end('User with thie email already exists');
+    res.redirect('/signup?userMsg=User with thie email already exists');
 });
 
 app.get('/users/:user_id', (req, res) => {
-    const { user_id } = req.params;
+    let { user_id } = req.params;
+    user_id--;
 
-    res.render('userCabinet', {name: users[user_id].name, email: users[user_id].email, password: users[user_id].password});
-});
-
-app.get('/signup', (req, res) => {
-    res.render('signup');
+    res.redirect('/userCabinet?id=' + users[user_id].id + '&name='+users[user_id].name + '&email='+users[user_id].email + '&password=' + users[user_id].password);   
 });
 
 app.get('/auth', (req, res) => {
-    res.render('auth');
+    const query = req.query;
+   
+    res.render('auth', {badEmailMsg: query.badEmailMsg, badPasswordMsg: query.badPasswordMsg});
+});
+
+app.get('/signup', (req, res) => {
+    const query = req.query;
+
+    res.render('signup',{userMsg: query.userMsg, badEmailMsg: query.badEmailMsg, badPasswordMsg: query.badPasswordMsg});
 });
 
 app.get('/userCabinet', (req, res) => {
-    res.render('userCabinet');
+    const query = req.query;
+
+    res.render('userCabinet', { id: query.id, name: query.name, email: query.email, password: query.password });
 });
 
 app.get('/users', (req, res) => {

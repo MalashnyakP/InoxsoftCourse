@@ -8,10 +8,20 @@
 </head>
 <body>
 
+<header>
+    <a href="/signup">Sign up</a>
+    <a href="/auth">Sign in</a>
+    <a href="/users">All users</a>
+</header>
+
 <form action="/auth" method="post">
-    <input type="text" name="email">
-    <input type="text" name="password">
-    <input type="submit" value="Send">
+    <p>Enter email:</p>
+    <input type="text" name="email"><br>
+    <p><small>{{badEmailMsg}}</small></p>
+    <p>Enter password:</p>
+    <input type="text" name="password"><br>
+    <p><small>{{badPasswordMsg}}</small></p>  
+    <input type="submit" value="Send"><br>
 </form>
 
 </body>
