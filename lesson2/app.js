@@ -6,7 +6,6 @@ const util = require('util');
 
 const { emailValidator } = require('./helper/emailValidator');
 const { PORT } = require('./configs/config');
-const statusCodes = require('./configs/statusCodesENUM');
 const users = require('./dataBase/users.json');
 
 const app = express();
@@ -25,48 +24,50 @@ app.set('views', staticPath);
 app.post('/auth', (req, res) => {
     const { email, password } = req.body;
 
-    if(!emailValidator(email)){
+    if (!emailValidator(email)) {
         res.redirect('/auth?badEmailMsg=Enter valid email.');
         return;
     }
 
-    const user = users.find(user => user.email === email);
-    
+    const user = users.find((userItr) => userItr.email === email);
+
     if (!user) {
         res.redirect('/signup?userMsg=User not found. Try to sign up.');
         return;
     }
 
-    if(user.password !== password){
+    if (user.password !== password) {
         res.redirect('/auth?badPasswordMsg=Wrong password.');
         return;
     }
 
-    res.redirect('/userCabinet?id=' + user.id + '&name=' + user.name + '&email=' + user.email + '&password=' + user.password); 
+    res.redirect(`/userCabinet?id=${user.id}&name=${user.name}&email=${user.email}&password=${user.password}`);
 });
 
 app.post('/signup', (req, res) => {
     const { name, email, password } = req.body;
-    
-    if(!emailValidator(email)){
-        res.redirect('/signup?badEmailMsg=Enter valid email.');        
+
+    if (!emailValidator(email)) {
+        res.redirect('/signup?badEmailMsg=Enter valid email.');
         return;
     }
 
-    if(password.length < 5){
-        res.redirect('/signup?badPasswordMsg=Enter valid password. Minimun length 5 characters.'); 
+    if (password.length < 5) {
+        res.redirect('/signup?badPasswordMsg=Enter valid password. Minimun length 5 characters.');
         return;
     }
- 
-    const user = users.find(user => user.email === email);
 
-    if(!user){
-        users.push({id: users.length + 1, name, email, password});
-       
-        const usersJSON = JSON.stringify(users);         
+    const user = users.find((userItr) => userItr.email === email);
+
+    if (!user) {
+        users.push({
+            id: users.length + 1, name, email, password
+        });
+
+        const usersJSON = JSON.stringify(users);
         writeFilePromisify(dbPath, usersJSON);
-        
-        res.redirect('auth');      
+
+        res.redirect('auth');
         return;
     }
 
@@ -77,25 +78,29 @@ app.get('/users/:user_id', (req, res) => {
     let { user_id } = req.params;
     user_id--;
 
-    res.redirect('/userCabinet?id=' + users[user_id].id + '&name='+users[user_id].name + '&email='+users[user_id].email + '&password=' + users[user_id].password);   
+    res.render('userCabinet', {
+        id: users[user_id].id, name: users[user_id].name, email: users[user_id].email, password: users[user_id].password
+    });
 });
 
 app.get('/auth', (req, res) => {
-    const query = req.query;
-   
-    res.render('auth', {badEmailMsg: query.badEmailMsg, badPasswordMsg: query.badPasswordMsg});
+    const { query } = req;
+
+    res.render('auth', { badEmailMsg: query.badEmailMsg, badPasswordMsg: query.badPasswordMsg });
 });
 
 app.get('/signup', (req, res) => {
-    const query = req.query;
+    const { query } = req;
 
-    res.render('signup',{userMsg: query.userMsg, badEmailMsg: query.badEmailMsg, badPasswordMsg: query.badPasswordMsg});
+    res.render('signup', { userMsg: query.userMsg, badEmailMsg: query.badEmailMsg, badPasswordMsg: query.badPasswordMsg });
 });
 
 app.get('/userCabinet', (req, res) => {
-    const query = req.query;
+    const { query } = req;
 
-    res.render('userCabinet', { id: query.id, name: query.name, email: query.email, password: query.password });
+    res.render('userCabinet', {
+        id: query.id, name: query.name, email: query.email, password: query.password
+    });
 });
 
 app.get('/users', (req, res) => {

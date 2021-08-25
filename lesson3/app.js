@@ -4,7 +4,7 @@ const path = require('path');
 
 const { PORT } = require('./configs/config');
 
-const {authRouter, userRouter} = require('./routers');
+const { authRouter, userRouter } = require('./routers');
 
 const app = express();
 const staticPath = path.join(__dirname, 'static');

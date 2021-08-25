@@ -4,4 +4,4 @@ const userRouter = require('./user.router');
 module.exports = {
     authRouter,
     userRouter
-}
+};

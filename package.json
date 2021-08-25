@@ -1,19 +1,20 @@
 {
-    "name": "InoxsoftCourse",
-    "version": "1.0.0",    
+    "name": "inoxsoft_course",
+    "version": "1.0.0",
     "author": "",
     "license": "ISC",
     "engines": {
         "node": "12.*.*"
-      },
-      "dependencies": {
+    },
+    "dependencies": {
         "express": "^4.17.1",
         "express-handlebars": "^5.3.3"
-      },    
+    },
     "devDependencies": {
         "eslint": "^7.32.0",
         "eslint-config-airbnb": "^18.2.1",
         "eslint-config-prettier": "^8.3.0",
+        "eslint-config-rallycoding": "^3.2.0",
         "eslint-plugin-import": "^2.24.1",
         "eslint-plugin-jsx-a11y": "^6.4.1",
         "eslint-plugin-node": "^11.1.0",
