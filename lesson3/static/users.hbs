@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Users info</title>
+</head>
+<body>
+
+<header>
+    <a href="/signup">Sign up</a>
+    <a href="/auth">Sign in</a>
+    <a href="/users">All users</a>
+</header>
+
+{{#each users}}    
+    <h2>Id: {{this.id}}</h2>  
+    {{#if this.name}}
+        <h2>Name: {{this.name}}</h2>   
+    {{/if}}
+
+    <h2>Email: {{this.email}}</h2>
+    <h2>Password: {{this.password}}</h2>
+
+    <form action="/users/{{this.id}}" method="get">    
+        <input type="submit" value="Get this user info">
+    </form>
+    <hr>
+{{/each}}
+
+</body>
+</html>

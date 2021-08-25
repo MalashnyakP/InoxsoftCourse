@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Sign in</title>
+</head>
+<body>
+
+<header>
+    <a href="/signup">Sign up</a>
+    <a href="/auth">Sign in</a>
+    <a href="/users">All users</a>
+</header>
+
+<form action="/auth" method="post">
+    <p>Enter email:</p>
+    <input type="text" name="email"><br>
+    <p><small>{{badEmailMsg}}</small></p>
+    <p>Enter password:</p>
+    <input type="text" name="password"><br>
+    <p><small>{{badPasswordMsg}}</small></p>  
+    <input type="submit" value="Send"><br>
+</form>
+
+</body>
+</html>

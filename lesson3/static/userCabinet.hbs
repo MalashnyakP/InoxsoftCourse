@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Personal cabinet</title>
+</head>
+<body>
+
+<header>
+    <a href="/signup">Sign up</a>
+    <a href="/auth">Sign in</a>
+    <a href="/users">All users</a>
+</header>
+
+<h1> Hello {{name}} </h1>
+
+<h2> Id: {{id}} </h2>
+<h2> Email: {{email}} </h2>
+<h2> Password: {{password}} </h2>
+
+<form action="/users" method="get">    
+    <input type="submit" value="Get all users">
+</form>
+
+</body>
+</html>
