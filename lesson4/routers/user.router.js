@@ -1,0 +1,9 @@
+const router = require('express').Router();
+const { getAllUsers, getUserById } = require('../controllers/user.controller');
+const { isUserByIdExists } = require('../middlewares/user.middleware');
+
+router.get('/', getAllUsers);
+
+router.get('/:user_id', isUserByIdExists, getUserById);
+
+module.exports = router;
