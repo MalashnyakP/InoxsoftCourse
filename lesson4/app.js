@@ -3,6 +3,8 @@ const expressHbs = require('express-handlebars');
 const mongoose = require('mongoose');
 const path = require('path');
 
+// доробити статус коди
+
 const { PORT } = require('./configs/config');
 
 mongoose.connect('mongodb://localhost:27017/inoxoft');

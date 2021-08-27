@@ -1,6 +1,7 @@
 const { emailValidator } = require('../helper/emailValidator');
 const { User } = require('../dataBase');
 const ErrorHandler = require('../errors/ErrorsHandler');
+const StatusCodesEnum = require('../configs/statusCodesENUM');
 
 module.exports = {
     isEmailExists: async (req, res, next) => {
@@ -10,7 +11,7 @@ module.exports = {
             const userByEmail = await User.findOne({ email: email.trim() });
 
             if (userByEmail) {
-                throw new ErrorHandler(409, 'User with this email already exists.');
+                throw new ErrorHandler(StatusCodesEnum.CONFLICT, 'User with this email already exists.');
             }
 
             next();
@@ -24,7 +25,7 @@ module.exports = {
             const { email } = req.body;
 
             if (!emailValidator(email.trim())) {
-                throw new ErrorHandler(409, 'Not valid email.');
+                throw new ErrorHandler(StatusCodesEnum.CONFLICT, 'Not valid email.');
             }
 
             next();
@@ -40,7 +41,7 @@ module.exports = {
             const userByEmail = await User.findOne({ email: email.trim() });
 
             if (!userByEmail) {
-                throw new ErrorHandler(404, 'No user found.');
+                throw new ErrorHandler(StatusCodesEnum.NOT_FOUND, 'No user found.');
             }
 
             next();
@@ -56,7 +57,7 @@ module.exports = {
             const userById = await User.findById(user_id);
 
             if (!userById) {
-                throw new ErrorHandler(404, 'User not found.');
+                throw new ErrorHandler(StatusCodesEnum.NOT_FOUND, 'User not found.');
             }
 
             next();
@@ -70,7 +71,7 @@ module.exports = {
             const { password } = req.body;
 
             if (password.trim().length < 5) {
-                throw new ErrorHandler(409, 'Password isn\'t valid.');
+                throw new ErrorHandler(StatusCodesEnum.CONFLICT, 'Password isn\'t valid.');
             }
 
             next();
@@ -86,7 +87,7 @@ module.exports = {
             const user = await User.findOne({ email: email.trim() });
 
             if (user.password !== password.trim()) {
-                throw new ErrorHandler(409, 'Wrong password.');
+                throw new ErrorHandler(StatusCodesEnum.CONFLICT, 'Wrong password.');
             }
             next();
         } catch (e) {
