@@ -8,7 +8,7 @@ router.get('/', getAllUsers);
 router.get('/:user_id', userMiddleware.isUserByIdExists, getUserById);
 
 router.delete('/:user_id', userMiddleware.isUserByIdExists, deleteUser);
-router.put('/:user_id', userMiddleware.isEmailValid, userMiddleware.isPasswordValid,
+router.put('/:user_id', userMiddleware.isDataCorrect, userMiddleware.isEmailValid, userMiddleware.isPasswordValid,
     userMiddleware.isUserExists, userMiddleware.isEmailExists, updateUser);
 
 module.exports = router;

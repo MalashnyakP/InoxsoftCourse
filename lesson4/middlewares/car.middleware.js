@@ -9,6 +9,9 @@ module.exports = {
             if (!model || !year) {
                 throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, 'Bad data.');
             }
+
+            req.body.model = model.trim();
+
             next();
         } catch (e) {
             next(e);

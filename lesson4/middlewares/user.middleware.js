@@ -10,6 +10,11 @@ module.exports = {
             if (!email || !name || !password) {
                 throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, 'Bad data.');
             }
+
+            req.body.email = email.trim();
+            req.body.name = name.trim();
+            req.body.password = password.trim();
+
             next();
         } catch (e) {
             next(e);
