@@ -9,7 +9,7 @@ const { PORT } = require('./configs/config');
 
 mongoose.connect('mongodb://localhost:27017/inoxoft');
 
-const { authRouter, userRouter } = require('./routers');
+const { authRouter, carRouter, userRouter } = require('./routers');
 
 const app = express();
 const staticPath = path.join(__dirname, 'static');
@@ -24,6 +24,7 @@ app.set('views', staticPath);
 
 app.use('/', authRouter);
 app.use('/users', userRouter);
+app.use('/cars', carRouter);
 app.use(_errorHandler);
 
 app.listen(PORT, () => {
