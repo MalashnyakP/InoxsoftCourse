@@ -3,6 +3,18 @@ const ErrorHandler = require('../errors/ErrorsHandler');
 const StatusCodesEnum = require('../configs/statusCodesENUM');
 
 module.exports = {
+    isDataCorrect: (req, res, next) => {
+        try {
+            const { model, year } = req.body;
+            if (!model || !year) {
+                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, 'Bad data.');
+            }
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
     isCarExists: async (req, res, next) => {
         try {
             const { car_id } = req.params;

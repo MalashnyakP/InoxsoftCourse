@@ -4,7 +4,8 @@ const userRolesEnum = require('../configs/user-role.enum');
 const userSchema = new Schema({
     name: {
         type: String,
-        trim: true
+        trim: true,
+        required: true
     },
     email: {
         type: String,

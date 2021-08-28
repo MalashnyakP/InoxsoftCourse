@@ -4,6 +4,18 @@ const ErrorHandler = require('../errors/ErrorsHandler');
 const StatusCodesEnum = require('../configs/statusCodesENUM');
 
 module.exports = {
+    isDataCorrect: (req, res, next) => {
+        try {
+            const { email, name, password } = req.body;
+            if (!email || !name || !password) {
+                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, 'Bad data.');
+            }
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
     isEmailExists: async (req, res, next) => {
         try {
             const { email } = req.body;
