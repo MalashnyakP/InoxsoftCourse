@@ -19,6 +19,20 @@ module.exports = {
         }
     },
 
+    isCarIdValid: (req, res, next) => {
+        try {
+            const { error } = carValidator.createCarValidator.validate(req.params);
+
+            if (error) {
+                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, 'Bad query.');
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
     isCreateCarDataValid: (req, res, next) => {
         try {
             const { error, value } = carValidator.createCarValidator.validate(req.body);

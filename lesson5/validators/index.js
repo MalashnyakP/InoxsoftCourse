@@ -1,4 +1,4 @@
 module.exports = {
-    userValidator: require('./user.validator'),
-    carValidator: require('./car.validator')
+    carValidator: require('./car.validator'),
+    userValidator: require('./user.validator')
 };

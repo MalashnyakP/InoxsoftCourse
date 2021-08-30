@@ -100,6 +100,20 @@ module.exports = {
         }
     },
 
+    isUserIdValid: (req, res, next) => {
+        try {
+            const { error } = userValidator.userIdValidator.validate(req.params);
+
+            if (error) {
+                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, 'Bad query.');
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
     isUpdateUserDataValid: (req, res, next) => {
         try {
             const { error, value } = userValidator.updateUserValidator.validate(req.body);

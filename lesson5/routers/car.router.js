@@ -9,14 +9,17 @@ router.post('/',
 router.get('/', carController.getAllCars);
 
 router.delete('/:car_id',
+    carMiddleware.isCarIdValid,
     carMiddleware.isCarExists,
     carController.deleteCar);
 
 router.get('/:car_id',
+    carMiddleware.isCarIdValid,
     carMiddleware.isCarExists,
     carController.getCarById);
 
 router.put('/:car_id',
+    carMiddleware.isCarIdValid,
     carMiddleware.isUpdateCarDataValid,
     carMiddleware.isCarExists,
     carController.updateCar);

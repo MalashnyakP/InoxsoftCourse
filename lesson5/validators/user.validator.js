@@ -28,6 +28,14 @@ const createUserValidator = Joi.object({
         .allow(...Object.values(userRolesEnum))
 });
 
+const userIdValidator = Joi.object({
+    user_id: Joi
+        .string()
+        .trim()
+        .min(24).max(24)
+        .required()
+});
+
 const updateUserValidator = Joi.object({
     name: Joi
         .string()
@@ -67,5 +75,6 @@ const logInUserValidator = Joi.object({
 module.exports = {
     createUserValidator,
     logInUserValidator,
-    updateUserValidator
+    updateUserValidator,
+    userIdValidator
 };
