@@ -1,14 +1,13 @@
 const { User } = require('../dataBase');
-const StatusCodesEnum = require('../configs/statusCodesENUM');
 
 module.exports = {
     deleteUser: async (req, res, next) => {
         try {
             const { user_id } = req.params;
 
-            await User.deleteOne({ _id: user_id });
+            await User.findByIdAndDelete(user_id);
 
-            res.status(StatusCodesEnum.DELETED).json('User deleted succesfully.');
+            res.json({ message: 'User deleted succesfully.' });
         } catch (e) {
             next(e);
         }
@@ -30,7 +29,7 @@ module.exports = {
 
             const userById = await User.findById(user_id);
 
-            res.status(StatusCodesEnum.OK).json(userById);
+            res.json(userById);
         } catch (e) {
             next(e);
         }
@@ -38,11 +37,12 @@ module.exports = {
 
     updateUser: async (req, res, next) => {
         try {
-            const { userId } = req.params;
+            const { user_id } = req.params;
+            const { ...userData } = req.body;
 
-            const updatedUser = await User.findOneAndUpdate(userId, req.body);
+            await User.findByIdAndUpdate(user_id, userData);
 
-            res.json(updatedUser);
+            res.json({ message: 'User updated' });
         } catch (e) {
             next(e);
         }

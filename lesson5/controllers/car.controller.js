@@ -1,12 +1,11 @@
 const { Car } = require('../dataBase');
-const StatusCodesEnum = require('../configs/statusCodesENUM');
 
 module.exports = {
     createCar: async (req, res, next) => {
         try {
             const car = await Car.create(req.body);
 
-            res.status(StatusCodesEnum.CREATED).json(car);
+            res.json(car);
         } catch (e) {
             next(e);
         }
@@ -16,9 +15,9 @@ module.exports = {
         try {
             const { car_id } = req.params;
 
-            await Car.deleteOne(car_id);
+            await Car.findByIdAndDelete(car_id);
 
-            res.status(StatusCodesEnum.DELETED).json('Car deleted succesfully.');
+            res.json({ message: 'Car deleted succesfully.' });
         } catch (e) {
             next(e);
         }
@@ -36,11 +35,11 @@ module.exports = {
 
     getCarById: async (req, res, next) => {
         try {
-            const { user_id } = req.params;
+            const { car_id } = req.params;
 
-            const userById = await Car.findById(user_id);
+            const carById = await Car.findById(car_id);
 
-            res.status(StatusCodesEnum.OK).json(userById);
+            res.json(carById);
         } catch (e) {
             next(e);
         }
@@ -48,11 +47,12 @@ module.exports = {
 
     updateCar: async (req, res, next) => {
         try {
-            const { userId } = req.params;
+            const { car_id } = req.params;
+            const { ...carData } = req.body;
 
-            const updatedUser = await Car.findOneAndUpdate(userId, req.body);
+            await Car.findByIdAndUpdate(car_id, carData);
 
-            res.json(updatedUser);
+            res.json({ message: 'Car updated.' });
         } catch (e) {
             next(e);
         }
