@@ -1,16 +1,21 @@
 const { Car } = require('../dataBase');
-const ErrorHandler = require('../errors/ErrorsHandler');
-const StatusCodesEnum = require('../configs/statusCodesENUM');
 const { carValidator } = require('../validators');
+const ErrorHandler = require('../errors/ErrorsHandler');
+const { STATUS_CODES } = require('../configs');
 
 module.exports = {
     isCarExists: async (req, res, next) => {
         try {
-            const { car_id } = req.params;
-            const car = await Car.findById(car_id);
+            const { value, error } = carValidator.carIdValidator.validate(req.params);
+
+            if (error) {
+                throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, error.details[0].message);
+            }
+
+            const car = await Car.findById(value.car_id);
 
             if (!car) {
-                throw new ErrorHandler(StatusCodesEnum.NOT_FOUND, 'No such car found.');
+                throw new ErrorHandler(STATUS_CODES.NOT_FOUND, 'No such car found.');
             }
 
             next();
@@ -21,10 +26,10 @@ module.exports = {
 
     isCarIdValid: (req, res, next) => {
         try {
-            const { error } = carValidator.createCarValidator.validate(req.params);
+            const { error } = carValidator.carIdValidator.validate(req.params);
 
             if (error) {
-                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, error.details[0].message);
+                throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, error.details[0].message);
             }
 
             next();
@@ -38,7 +43,7 @@ module.exports = {
             const { error, value } = carValidator.createCarValidator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, error.details[0].message);
+                throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, error.details[0].message);
             }
 
             req.body = value;
@@ -54,7 +59,7 @@ module.exports = {
             const { error, value } = carValidator.updateCarValidator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, error.details[0].message);
+                throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, error.details[0].message);
             }
 
             req.body = value;

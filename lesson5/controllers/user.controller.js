@@ -1,5 +1,5 @@
 const { User } = require('../dataBase');
-const userUtil = require('../utils/user.utils');
+const { userUtil } = require('../utils');
 
 module.exports = {
     deleteUser: async (req, res, next) => {

@@ -3,7 +3,7 @@ const expressHbs = require('express-handlebars');
 const mongoose = require('mongoose');
 const path = require('path');
 
-const { PORT } = require('./configs/constants');
+const { CONSTANTS } = require('./configs');
 
 mongoose.connect('mongodb://localhost:27017/inoxoft');
 
@@ -25,7 +25,7 @@ app.use('/users', userRouter);
 app.use('/cars', carRouter);
 app.use(_errorHandler);
 
-app.listen(PORT, () => {
+app.listen(CONSTANTS.PORT, () => {
     console.log('Listening to 5000');
 });
 

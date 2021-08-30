@@ -1,16 +1,15 @@
-const { User } = require('../dataBase');
+const { CONSTANTS, STATUS_CODES } = require('../configs');
 const ErrorHandler = require('../errors/ErrorsHandler');
-const StatusCodesEnum = require('../configs/statusCodesENUM');
+const { User } = require('../dataBase');
 const { userValidator } = require('../validators');
 
 module.exports = {
-
     isCreateUserDataValid: (req, res, next) => {
         try {
             const { error, value } = userValidator.createUserValidator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, error.details[0].message);
+                throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, error.details[0].message);
             }
 
             req.body = value;
@@ -25,10 +24,14 @@ module.exports = {
         try {
             const { email } = req.body;
 
+            if (!CONSTANTS.EMAIL_REGEX.test(email)) {
+                throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, 'Invalid email.');
+            }
+
             const userByEmail = await User.findOne({ email: email.trim() });
 
             if (userByEmail) {
-                throw new ErrorHandler(StatusCodesEnum.CONFLICT, 'User with this email already exists.');
+                throw new ErrorHandler(STATUS_CODES.CONFLICT, 'User with this email already exists.');
             }
 
             next();
@@ -42,7 +45,7 @@ module.exports = {
             const { error, value } = userValidator.logInUserValidator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, error.details[0].message);
+                throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, error.details[0].message);
             }
 
             req.body = value;
@@ -55,12 +58,16 @@ module.exports = {
 
     isUserByIdExists: async (req, res, next) => {
         try {
-            const { user_id } = req.params;
+            const { value, error } = userValidator.userIdValidator.validate(req.params);
 
-            const userById = await User.findById(user_id);
+            if (error) {
+                throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, error.details[0].message);
+            }
+
+            const userById = await User.findById(value.user_id);
 
             if (!userById) {
-                throw new ErrorHandler(StatusCodesEnum.NOT_FOUND, 'User not found.');
+                throw new ErrorHandler(STATUS_CODES.NOT_FOUND, 'User not found.');
             }
 
             next();
@@ -73,10 +80,13 @@ module.exports = {
         try {
             const { email } = req.body;
 
+            if (!CONSTANTS.EMAIL_REGEX.test(email)) {
+                throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, 'Invalid email.');
+            }
             const userByEmail = await User.findOne({ email: email.trim() });
 
             if (!userByEmail) {
-                throw new ErrorHandler(StatusCodesEnum.NOT_FOUND, 'No user found.');
+                throw new ErrorHandler(STATUS_CODES.NOT_FOUND, 'No user found.');
             }
 
             next();
@@ -85,26 +95,20 @@ module.exports = {
         }
     },
 
-    isUserIdValid: (req, res, next) => {
-        try {
-            const { error } = userValidator.userIdValidator.validate(req.params);
-
-            if (error) {
-                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, error.details[0].message);
-            }
-
-            next();
-        } catch (e) {
-            next(e);
-        }
-    },
-
-    isUpdateUserDataValid: (req, res, next) => {
+    isUpdateUserDataValid: async (req, res, next) => {
         try {
             const { error, value } = userValidator.updateUserValidator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, error.details[0].message);
+                throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, error.details[0].message);
+            }
+
+            if (value.email) {
+                const userByEmail = await User.findOne({ email: value.email.trim() });
+
+                if (userByEmail) {
+                    throw new ErrorHandler(STATUS_CODES.CONFLICT, 'User with this email already exists.');
+                }
             }
 
             req.body = value;

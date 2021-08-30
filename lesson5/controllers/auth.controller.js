@@ -1,7 +1,7 @@
 const { compare, hash } = require('../services/password.service');
-const StatusCodesEnum = require('../configs/statusCodesENUM');
+const { STATUS_CODES } = require('../configs');
 const { User } = require('../dataBase');
-const { userNormalizator } = require('../utils/user.utils');
+const { userUtil } = require('../utils');
 
 module.exports = {
     signUp: async (req, res, next) => {
@@ -11,8 +11,8 @@ module.exports = {
 
             const user = await User.create({ ...req.body, password: hashPassword });
 
-            const normalizedUser = userNormalizator(user);
-            res.status(StatusCodesEnum.CREATED).json(normalizedUser);
+            const normalizedUser = userUtil.userNormalizator(user);
+            res.status(STATUS_CODES.CREATED).json(normalizedUser);
         } catch (e) {
             next(e);
         }
@@ -26,7 +26,7 @@ module.exports = {
 
             await compare(password, userByEmail.password);
 
-            const normalizedUser = userNormalizator(userByEmail);
+            const normalizedUser = userUtil.userNormalizator(userByEmail);
             res.json(normalizedUser);
         } catch (e) {
             next(e);
