@@ -1,4 +1,5 @@
 const { User } = require('../dataBase');
+const userUtil = require('../utils/user.utils');
 
 module.exports = {
     deleteUser: async (req, res, next) => {
@@ -15,9 +16,9 @@ module.exports = {
 
     getAllUsers: async (req, res, next) => {
         try {
-            await User.find().then((user) => {
-                res.json(user);
-            });
+            const users = await User.find({}).select('-password -__v');
+
+            res.json(users);
         } catch (e) {
             next(e);
         }
@@ -29,7 +30,7 @@ module.exports = {
 
             const userById = await User.findById(user_id);
 
-            res.json(userById);
+            res.json(userUtil.userNormalizator(userById));
         } catch (e) {
             next(e);
         }

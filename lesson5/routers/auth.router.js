@@ -6,7 +6,6 @@ const { userMiddleware } = require('../middlewares');
 router.post('/auth',
     userMiddleware.isLogInDataValid,
     userMiddleware.isUserExists,
-    userMiddleware.isPasswordCorrect,
     authController.signIn);
 
 router.post('/signup',

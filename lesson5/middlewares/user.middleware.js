@@ -10,7 +10,7 @@ module.exports = {
             const { error, value } = userValidator.createUserValidator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, 'Bad data.');
+                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, error.details[0].message);
             }
 
             req.body = value;
@@ -42,26 +42,11 @@ module.exports = {
             const { error, value } = userValidator.logInUserValidator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, 'Bad data.');
+                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, error.details[0].message);
             }
 
             req.body = value;
 
-            next();
-        } catch (e) {
-            next(e);
-        }
-    },
-
-    isPasswordCorrect: async (req, res, next) => {
-        try {
-            const { email, password } = req.body;
-
-            const user = await User.findOne({ email: email.trim() });
-
-            if (user.password !== password.trim()) {
-                throw new ErrorHandler(StatusCodesEnum.CONFLICT, 'Wrong password.');
-            }
             next();
         } catch (e) {
             next(e);
@@ -105,7 +90,7 @@ module.exports = {
             const { error } = userValidator.userIdValidator.validate(req.params);
 
             if (error) {
-                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, 'Bad query.');
+                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, error.details[0].message);
             }
 
             next();
@@ -119,7 +104,7 @@ module.exports = {
             const { error, value } = userValidator.updateUserValidator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, 'Bad data.');
+                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, error.details[0].message);
             }
 
             req.body = value;

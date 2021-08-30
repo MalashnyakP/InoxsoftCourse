@@ -24,7 +24,7 @@ module.exports = {
             const { error } = carValidator.createCarValidator.validate(req.params);
 
             if (error) {
-                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, 'Bad query.');
+                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, error.details[0].message);
             }
 
             next();
@@ -38,7 +38,7 @@ module.exports = {
             const { error, value } = carValidator.createCarValidator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, 'Bad data.');
+                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, error.details[0].message);
             }
 
             req.body = value;
@@ -54,7 +54,7 @@ module.exports = {
             const { error, value } = carValidator.updateCarValidator.validate(req.body);
 
             if (error) {
-                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, 'Bad data.');
+                throw new ErrorHandler(StatusCodesEnum.BAD_REQUEST, error.details[0].message);
             }
 
             req.body = value;

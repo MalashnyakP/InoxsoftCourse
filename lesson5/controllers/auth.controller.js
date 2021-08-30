@@ -1,12 +1,18 @@
-const { User } = require('../dataBase');
+const { compare, hash } = require('../services/password.service');
 const StatusCodesEnum = require('../configs/statusCodesENUM');
+const { User } = require('../dataBase');
+const { userNormalizator } = require('../utils/user.utils');
 
 module.exports = {
     signUp: async (req, res, next) => {
         try {
-            const user = await User.create(req.body);
+            const { password } = req.body;
+            const hashPassword = await hash(password);
 
-            res.status(StatusCodesEnum.CREATED).json(user);
+            const user = await User.create({ ...req.body, password: hashPassword });
+
+            const normalizedUser = userNormalizator(user);
+            res.status(StatusCodesEnum.CREATED).json(normalizedUser);
         } catch (e) {
             next(e);
         }
@@ -14,11 +20,14 @@ module.exports = {
 
     signIn: async (req, res, next) => {
         try {
-            const { email } = req.body;
+            const { email, password } = req.body;
 
             const userByEmail = await User.findOne({ email });
 
-            res.status(StatusCodesEnum.OK).json(userByEmail);
+            await compare(password, userByEmail.password);
+
+            const normalizedUser = userNormalizator(userByEmail);
+            res.json(normalizedUser);
         } catch (e) {
             next(e);
         }
