@@ -29,7 +29,7 @@ const carIdValidator = Joi.object({
     car_id: Joi
         .string()
         .trim()
-        .min(24).max(24)
+        .regex(CONSTANTS.MONGO_BD_ID)
         .required()
 });
 
