@@ -1,7 +1,8 @@
 module.exports = {
     CONSTANTS: require('./constants'),
     config: require('./config'),
-    databaseTableEnum: require('./dbTableENUM'),
-    STATUS_CODES: require('./statusCodesENUM'),
+    databaseTableEnum: require('./dbTable.enum'),
+    emailActionsEnum: require('./emailAction.enum'),
+    STATUS_CODES: require('./statusCodes.enum'),
     USER_ROLE: require('./user-role.enum')
 };

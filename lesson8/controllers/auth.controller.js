@@ -1,4 +1,6 @@
-const { STATUS_CODES, CONSTANTS, databaseTableEnum } = require('../configs');
+const {
+    STATUS_CODES, CONSTANTS, databaseTableEnum, emailActionsEnum
+} = require('../configs');
 const { ActionToken, OAuth, User } = require('../dataBase');
 const { userUtil } = require('../utils');
 const {
@@ -15,7 +17,7 @@ module.exports = {
 
             const normalizedUser = userUtil.userNormalizator(user);
 
-            emailService.sendEmail(normalizedUser.email, 'welcome', { userName: normalizedUser.name });
+            emailService.sendEmail(normalizedUser.email, emailActionsEnum.WELCOME, { userName: normalizedUser.name });
 
             res.status(STATUS_CODES.CREATED).json(normalizedUser);
         } catch (e) {
@@ -75,7 +77,7 @@ module.exports = {
 
             const reset_link = `http://localhost:5000/auth/reset_pass?action_token=${action_token}`;
 
-            emailService.sendEmail(email, 'reset', { reset_link });
+            emailService.sendEmail(email, emailActionsEnum.RESET, { reset_link });
 
             res.json({ action_token, user: userUtil.userNormalizator(user) });
             next();
@@ -90,7 +92,7 @@ module.exports = {
 
             const current_user = await User.findByIdAndUpdate({ _id: user._id }, { password: new_pass });
 
-            await ActionToken.findOneAndDelete({ user: user._id });
+            await ActionToken.deleteMany({ user: user._id });
 
             authService.logOutUserFromAllDevices(current_user);
 

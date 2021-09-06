@@ -1,3 +1,5 @@
+const { emailService } = require('../services');
+const { emailActionsEnum } = require('../configs');
 const { User } = require('../dataBase');
 const { userUtil } = require('../utils');
 
@@ -5,9 +7,11 @@ module.exports = {
     deleteUser: async (req, res, next) => {
         try {
             const { user_id } = req.params;
+            const { email } = req.user;
 
             await User.findByIdAndDelete(user_id);
 
+            emailService.sendEmail(email, emailActionsEnum.ACCOUNT_DELETED, { email });
             res.json({ message: 'User deleted succesfully.' });
         } catch (e) {
             next(e);
