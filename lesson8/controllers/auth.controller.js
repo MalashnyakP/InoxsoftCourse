@@ -15,7 +15,7 @@ module.exports = {
 
             const normalizedUser = userUtil.userNormalizator(user);
 
-            emailService.sendEmail('vorotar1117@gmail.com', 'welcome', { userName: normalizedUser.name });
+            emailService.sendEmail(normalizedUser.email, 'welcome', { userName: normalizedUser.name });
 
             res.status(STATUS_CODES.CREATED).json(normalizedUser);
         } catch (e) {
@@ -69,14 +69,13 @@ module.exports = {
         try {
             const { user, body: { email } } = req;
 
-            console.log(email);
             const action_token = jwtService.generateActionToken();
 
             await ActionToken.create({ action_token, [databaseTableEnum.USER]: user._id });
 
             const reset_link = `http://localhost:5000/auth/reset_pass?action_token=${action_token}`;
 
-            emailService.sendEmail('vorotar1117@gmail.com', 'reset', { reset_link });
+            emailService.sendEmail(email, 'reset', { reset_link });
 
             res.json({ action_token, user: userUtil.userNormalizator(user) });
             next();
