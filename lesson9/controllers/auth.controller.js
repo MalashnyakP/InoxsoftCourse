@@ -133,7 +133,7 @@ module.exports = {
 
             authService.logOutUserFromAllDevices(current_user);
 
-            res.json('Data swt.');
+            res.json('Data set.');
             next();
         } catch (e) {
             next(e);

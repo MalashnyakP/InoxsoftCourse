@@ -15,9 +15,9 @@ module.exports = {
 
     deleteCar: async (req, res, next) => {
         try {
-            const { car_id } = req.params;
+            const { current_user, params: { car_id } } = req;
 
-            await Car.findByIdAndDelete(car_id);
+            await Car.findByIdAndDelete({ _id: car_id, user: current_user._id });
 
             res.json({ message: 'Car deleted succesfully.' });
         } catch (e) {
@@ -61,10 +61,9 @@ module.exports = {
 
     updateCar: async (req, res, next) => {
         try {
-            const { car_id } = req.params;
-            const { ...carData } = req.body;
+            const { current_user: { _id }, params: { car_id }, body: { ...carData } } = req;
 
-            const updatedCar = await Car.findByIdAndUpdate({ _id: car_id }, { ...carData }, { new: true });
+            const updatedCar = await Car.findByIdAndUpdate({ _id: car_id, user: _id }, { ...carData }, { new: true });
 
             res.json(updatedCar);
         } catch (e) {

@@ -5,5 +5,7 @@ module.exports = {
     emailActionsEnum: require('./emailAction.enum'),
     STATUS_CODES: require('./statusCodes.enum'),
     USER_ROLE: require('./user-role.enum'),
-    USER_STATES: require('./user-state.enum')
+    USER_STATES: require('./user-state.enum'),
+    VALIDATORS_ENUM: require('./validatos.enum'),
+    REQ_FIELDS_ENUM: require('./req-fields.enum')
 };

@@ -1,18 +1,18 @@
 const router = require('express').Router();
 
-const { CONSTANTS, USER_ROLE } = require('../configs');
+const { CONSTANTS, VALIDATORS_ENUM, USER_ROLE } = require('../configs');
 const { authController } = require('../controllers');
 const { ActionToken } = require('../dataBase');
 const { authMiddleware, userMiddleware } = require('../middlewares');
 
 router.post('/signup',
-    userMiddleware.isCreateUserDataValid,
+    userMiddleware.validateDataDynamic(VALIDATORS_ENUM.CREATE_USER),
     userMiddleware.getUserByDynamicParam('email'),
     userMiddleware.isUserNotExists,
     authController.signUp);
 
 router.post('/auth',
-    userMiddleware.isLogInDataValid,
+    userMiddleware.validateDataDynamic(VALIDATORS_ENUM.LOG_IN_USER),
     userMiddleware.getUserByDynamicParam('email'),
     userMiddleware.isUserExists,
     userMiddleware.isUserActive,
@@ -31,7 +31,7 @@ router.post('/auth/refresh',
     authController.refreshToken);
 
 router.post('/auth/begin_pass_reset',
-    userMiddleware.isEmailDataValid,
+    userMiddleware.validateDataDynamic(VALIDATORS_ENUM.USER_EMAIL),
     userMiddleware.getUserByDynamicParam('email'),
     userMiddleware.isUserExists,
     authController.beginResetPassword);
@@ -43,7 +43,7 @@ router.post('/auth/reset_pass',
     authController.resetPassword);
 
 router.post('/auth/create_admin',
-    userMiddleware.isEmailDataValid,
+    userMiddleware.validateDataDynamic(VALIDATORS_ENUM.USER_EMAIL),
     authMiddleware.checkToken(),
     userMiddleware.checkUserRole([USER_ROLE.ADMIN]),
     userMiddleware.getUserByDynamicParam('email'),
@@ -51,9 +51,9 @@ router.post('/auth/create_admin',
     authController.createNewAdmin);
 
 router.post('/auth/set_admin',
+    userMiddleware.validateDataDynamic(VALIDATORS_ENUM.SET_USER_DATA),
     authMiddleware.checkToken(CONSTANTS.ACTION, ActionToken),
     authMiddleware.isPasswordsIdentical,
-    userMiddleware.isSetUserDataValid,
     authController.setAdminData);
 
 module.exports = router;

@@ -1,16 +1,18 @@
 const { Car } = require('../dataBase');
 const { carValidator } = require('../validators');
 const ErrorHandler = require('../errors/ErrorsHandler');
-const { STATUS_CODES } = require('../configs');
+const { STATUS_CODES, REQ_FIELDS_ENUM } = require('../configs');
 
 module.exports = {
-    isCarIdValid: (req, res, next) => {
+    validateDataDynamic: (validatorName, dataIn = REQ_FIELDS_ENUM.BODY) => (req, res, next) => {
         try {
-            const { error } = carValidator.carIdValidator.validate(req.params);
+            const { error, value } = carValidator[validatorName].validate(req[dataIn]);
 
             if (error) {
                 throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, error.details[0].message);
             }
+
+            req[dataIn] = value;
 
             next();
         } catch (e) {
@@ -32,39 +34,22 @@ module.exports = {
         }
     },
 
-    isCreateCarDataValid: (req, res, next) => {
+    isCarOwnedByUser: async (req, res, next) => {
         try {
-            const { error, value } = carValidator.createCarValidator.validate(req.body);
+            const { current_user, params: { car_id } } = req;
 
-            if (error) {
-                throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, error.details[0].message);
+            const carOwnedByUser = await Car.findOne({ _id: car_id, user: current_user._id });
+console.log(carOwnedByUser);
+            if (!carOwnedByUser) {
+                throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, 'This car isn\'t owned by this user.');
             }
-
-            req.body = value;
-
             next();
         } catch (e) {
             next(e);
         }
     },
 
-    isUpdateCarDataValid: (req, res, next) => {
-        try {
-            const { error, value } = carValidator.updateCarValidator.validate(req.body);
-
-            if (error) {
-                throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, error.details[0].message);
-            }
-
-            req.body = value;
-
-            next();
-        } catch (e) {
-            next(e);
-        }
-    },
-
-    getCarByDynamicParm: (paramName, searchIn = 'body', dbField = paramName) => async (req, res, next) => {
+    getCarByDynamicParm: (paramName, searchIn = REQ_FIELDS_ENUM.BODY, dbField = paramName) => async (req, res, next) => {
         try {
             const searchValue = req[searchIn][paramName];
 
