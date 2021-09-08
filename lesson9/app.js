@@ -3,13 +3,10 @@ const mongoose = require('mongoose');
 
 require('dotenv').config();
 
-const { createFirstAdmin } = require('./utils/admin.utils');
 const { config } = require('./configs');
 const { authRouter, carRouter, userRouter } = require('./routers');
 
 mongoose.connect(config.DB_CONNECT_URL);
-
-createFirstAdmin();
 
 const app = express();
 

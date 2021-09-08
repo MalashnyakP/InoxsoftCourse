@@ -1,6 +1,8 @@
 const { Schema, model } = require('mongoose');
 
-const { databaseTableEnum, USER_ROLE, USER_STATES } = require('../configs');
+const {
+    databaseTableEnum, USER_ROLE, USER_STATES, config
+} = require('../configs');
 const passwordService = require('../services/password.service');
 
 const userSchema = new Schema({
@@ -39,4 +41,17 @@ userSchema.statics = {
     }
 };
 
-module.exports = model(databaseTableEnum.USER, userSchema);
+const User = model(databaseTableEnum.USER, userSchema);
+
+User.countDocuments({ role: USER_ROLE.ADMIN }, async (err, count) => {
+    if (count) {
+        return;
+    }
+    const hashPassword = await passwordService.hash(config.FIRST_ADMIN_PASSWORD);
+
+    await User.create({
+        email: config.FIRST_ADMIN_EMAIL, password: hashPassword, name: config.FIRST_ADMIN_NAME, role: USER_ROLE.ADMIN
+    });
+});
+
+module.exports = User;
