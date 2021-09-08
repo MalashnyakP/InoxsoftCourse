@@ -8,6 +8,4 @@ module.exports = {
     ACCESS: 'access',
     REFRESH: 'refresh',
     ACTION: 'action',
-
-    RESET_PASS_LINK: 'http://localhost:5000/auth/reset_pass?action_token='
 };

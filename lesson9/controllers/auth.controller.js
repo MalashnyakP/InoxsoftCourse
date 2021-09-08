@@ -1,5 +1,5 @@
 const {
-    STATUS_CODES, CONSTANTS, databaseTableEnum, emailActionsEnum
+    STATUS_CODES, config, CONSTANTS, databaseTableEnum, emailActionsEnum, USER_STATES
 } = require('../configs');
 const { ActionToken, OAuth, User } = require('../dataBase');
 const { userUtil } = require('../utils');
@@ -10,10 +10,7 @@ const {
 module.exports = {
     signUp: async (req, res, next) => {
         try {
-            const { password } = req.body;
-            const hashPassword = await passwordService.hash(password);
-
-            const user = await User.create({ ...req.body, password: hashPassword });
+            const user = await User.createUserWithHashPass(req.body);
 
             const normalizedUser = userUtil.userNormalizator(user);
 
@@ -75,7 +72,7 @@ module.exports = {
 
             await ActionToken.create({ action_token, [databaseTableEnum.USER]: user._id });
 
-            const reset_link = CONSTANTS.RESET_PASS_LINK + action_token;
+            const reset_link = `${config.FRONTEND_URL}/auth/reset_pass?action_token=${action_token}`;
 
             emailService.sendEmail(email, emailActionsEnum.RESET, { reset_link });
 
@@ -88,15 +85,55 @@ module.exports = {
 
     resetPassword: async (req, res, next) => {
         try {
-            const { new_pass, user } = req;
+            const { password, current_user } = req;
 
-            const current_user = await User.findByIdAndUpdate({ _id: user._id }, { password: new_pass });
+            await User.findByIdAndUpdate({ _id: current_user._id }, { password });
 
-            await ActionToken.deleteMany({ user: user._id });
+            await ActionToken.deleteMany({ user: current_user._id });
 
             authService.logOutUserFromAllDevices(current_user);
 
             res.json('Password changed.');
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    createNewAdmin: async (req, res, next) => {
+        try {
+            const { current_user } = req;
+
+            const newAdmin = await User.create({ ...req.body, state: USER_STATES.INACTIVE });
+
+            const action_token = jwtService.generateActionToken();
+
+            await ActionToken.create({ action_token, [databaseTableEnum.USER]: newAdmin._id });
+
+            const set_link = `${config.FRONTEND_URL}/auth/set_admin?action_token=${action_token}`;
+
+            emailService.sendEmail(newAdmin.email, emailActionsEnum.SET_DATA, { set_link, admin_email: current_user.email });
+
+            res.json({ action_token, user: userUtil.userNormalizator(newAdmin) });
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    setAdminData: async (req, res, next) => {
+        try {
+            const { body: { name, password }, current_user } = req;
+
+            const hashPassword = await passwordService.hash(password);
+
+            await User.findByIdAndUpdate({ _id: current_user._id }, { password: hashPassword, name, state: USER_STATES.ACTIVE });
+
+            await ActionToken.deleteMany({ user: current_user._id });
+
+            authService.logOutUserFromAllDevices(current_user);
+
+            res.json('Data swt.');
             next();
         } catch (e) {
             next(e);
