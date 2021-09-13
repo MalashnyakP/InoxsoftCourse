@@ -2,23 +2,13 @@ const { Schema, model } = require('mongoose');
 
 const { databaseTableEnum } = require('../configs');
 
-const carSchema = new Schema({
-    brand: {
+const OAuthSchema = new Schema({
+    access_token: {
         type: String,
-        required: true,
-        trim: true
-    },
-    model: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    price: {
-        type: Number,
         required: true
     },
-    year: {
-        type: Number,
+    refresh_token: {
+        type: String,
         required: true
     },
     [databaseTableEnum.USER]: {
@@ -28,4 +18,4 @@ const carSchema = new Schema({
     }
 }, { timestamps: true });
 
-module.exports = model('car', carSchema);
+module.exports = model(databaseTableEnum.OAUTH, OAuthSchema);
