@@ -1,72 +1,73 @@
+const statusCodes = require('./statusCodes.enum');
+
 module.exports = {
     BAD_REQUEST: {
-
         FILE_SIZE: {
             msg: 'File size is too big.',
-            status_code: 400,
-            custom_code: 4008
+            status_code: statusCodes.BAD_REQUEST,
+            custom_code: '400.8'
         },
 
         LOG_IN: {
             msg: 'Email or password is wrong.',
-            status_code: 400,
-            custom_code: 4009
+            status_code: statusCodes.BAD_REQUEST,
+            custom_code: '400.9'
         },
 
         NOT_OWNED_BY_USER: {
             msg: 'This car isn\'t owned by this user.',
-            status_code: 400,
-            custom_code: 4006
+            status_code: statusCodes.BAD_REQUEST,
+            custom_code: '400.6'
         },
 
         PASSWORDS_DONT_MATCH: {
             msg: 'Passwords don\'t match.',
-            status_code: 400,
-            custom_code: 4003
+            status_code: statusCodes.BAD_REQUEST,
+            custom_code: '400.3'
         },
 
         PASSWORD_INVALID: {
             msg: 'Passwords isn\'t valid.',
-            status_code: 400,
-            custom_code: 4002
+            status_code: statusCodes.BAD_REQUEST,
+            custom_code: '400.2'
         },
 
         VALIDATION: {
-            status_code: 400,
-            custom_code: 4005
+            status_code: statusCodes.BAD_REQUEST,
+            custom_code: '400.5'
         },
 
         WRONG_FILE_FORMAT: {
             msg: 'File has wrong format.',
-            status_code: 400,
-            custom_code: 4007
+            status_code: statusCodes.BAD_REQUEST,
+            custom_code: '400.7'
         },
 
         WRONG_TEMPLATE: {
             msg: 'Wrong email template.',
-            status_code: 400,
-            custom_code: 4009
+            status_code: statusCodes.BAD_REQUEST,
+            custom_code: '400.9'
         }
     },
 
     CONFLICT: {
         USER_CONFLICT: {
             msg: 'User with this email already exists.',
-            status_code: 409,
-            custom_code: 40901
+            status_code: statusCodes.CONFLICT,
+            custom_code: '409.1'
         },
     },
 
     FORBIDDEN: {
         USER_ACTIVE: {
             msg: 'User not activated.',
-            status_code: 403,
-            custom_code: 40302
+            status_code: statusCodes.FORBIDDEN,
+            custom_code: '403.2'
         },
         USER_FORBIDDEN: {
             msg: 'This user role forbiden from this action.',
-            status_code: 403,
-            custom_code: 40301
+            status_code: statusCodes.FORBIDDEN,
+            custom_code: '403.1'
         },
 
     },
@@ -74,22 +75,22 @@ module.exports = {
     UNAUTHORIZED: {
         INVALID_TOKEN: {
             msg: 'Invalid token.',
-            status_code: 401,
-            custom_code: 40101
+            status_code: statusCodes.UNA,
+            custom_code: '401.1'
         }
     },
 
     NOT_FOUND: {
         CAR_NF: {
             msg: 'No car found.',
-            status_code: 404,
-            custom_code: 40402
+            status_code: statusCodes.NOT_FOUND,
+            custom_code: '404.2'
         },
 
         USER_NF: {
             msg: 'No user found.',
-            status_code: 404,
-            custom_code: 40401
+            status_code: statusCodes.NOT_FOUND,
+            custom_code: '404.1'
         },
     }
 };

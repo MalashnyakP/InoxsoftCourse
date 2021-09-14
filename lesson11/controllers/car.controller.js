@@ -1,5 +1,5 @@
 const { Car } = require('../dataBase');
-const { queryUtils } = require('../utils');
+const { carService: { carSearchQuery } } = require('../services');
 
 module.exports = {
     createCar: async (req, res, next) => {
@@ -26,15 +26,11 @@ module.exports = {
         }
     },
 
-    getAllCars: async (req, res, next) => {
+    getCars: async (req, res, next) => {
         try {
-            const { limit = 5, page = 1 } = req.query;
+            const result = await carSearchQuery(req.query);
 
-            const filter = queryUtils.buildCarSearchFilter(req.query);
-
-            const cars = await Car.find(filter).limit(+limit).skip(limit * (page - 1));
-
-            res.json(cars);
+            res.json(result);
         } catch (e) {
             next(e);
         }

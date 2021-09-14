@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(expressFileUpload());
 app.use(helmet());
 
-if (process.env.DEV === 'dev') {
+if (process.env.ENV === 'dev') {
     // eslint-disable-next-line import/no-extraneous-dependencies
     const morgan = require('morgan');
 

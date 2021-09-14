@@ -9,7 +9,7 @@ router.post('/',
     authMiddleware.checkToken(),
     carController.createCar);
 
-router.get('/', carController.getAllCars);
+router.get('/', carController.getCars);
 
 router.get('/owned',
     authMiddleware.checkToken(),
