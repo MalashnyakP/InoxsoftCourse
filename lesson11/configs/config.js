@@ -17,5 +17,7 @@ module.exports = {
     AWS_S3_ACCESS_KEY: process.env.AWS_S3_ACCESS_KEY,
     AWS_S3_SECRET_KEY: process.env.AWS_S3_SECRET_KEY,
     AWS_S3_REGION: process.env.AWS_S3_REGION || 'us-east-2',
-    AWS_S3_NAME: process.env.AWS_S3_NAME || 'inoxoft-course'
+    AWS_S3_NAME: process.env.AWS_S3_NAME || 'inoxoft-course',
+
+    ALLOWED_ORIGIN: 'http://localhost:4000'
 };

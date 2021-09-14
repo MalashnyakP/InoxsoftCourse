@@ -2,7 +2,7 @@ const EmailTemplates = require('email-templates');
 const nodemailer = require('nodemailer');
 const path = require('path');
 
-const { config, STATUS_CODES } = require('../configs');
+const { config, errors: { BAD_REQUEST: { WRONG_TEMPLATE } } } = require('../configs');
 const ErrorHandler = require('../errors/ErrorsHandler');
 const templates = require('../email-templates');
 
@@ -25,7 +25,7 @@ const sendEmail = async (userEmail, emailAction, context = {}) => {
     context = { ...context, frontendURL: config.FRONTEND_URL };
 
     if (!templateToSend) {
-        throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, 'Wrong template');
+        throw new ErrorHandler(WRONG_TEMPLATE.status_code, WRONG_TEMPLATE.custom_code, WRONG_TEMPLATE.msg);
     }
 
     const { templateName, subject } = templateToSend;

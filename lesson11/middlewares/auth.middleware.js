@@ -1,4 +1,7 @@
-const { CONSTANTS, STATUS_CODES, databaseTableEnum } = require('../configs');
+const {
+    CONSTANTS, databaseTableEnum,
+    errors: { BAD_REQUEST: { PASSWORDS_DONT_MATCH, PASSWORD_INVALID }, UNAUTHORIZED: { INVALID_TOKEN } }
+} = require('../configs');
 const ErrorHandler = require('../errors/ErrorsHandler');
 const { jwtService, passwordService } = require('../services');
 const { OAuth } = require('../dataBase');
@@ -9,7 +12,7 @@ module.exports = {
             const token = req.get(CONSTANTS.AUTHORIZATION);
 
             if (!token) {
-                throw new ErrorHandler(STATUS_CODES.UNA, 'Invalid token.');
+                throw new ErrorHandler(INVALID_TOKEN.status_code, INVALID_TOKEN.custom_code, INVALID_TOKEN.msg);
             }
 
             await jwtService.verifyToken(token, tokenType);
@@ -19,7 +22,7 @@ module.exports = {
             const tokenFromDb = await tokenDB.findOne({ [DBField]: token }).populate(databaseTableEnum.USER);
 
             if (!tokenFromDb) {
-                throw new ErrorHandler(STATUS_CODES.UNA, 'Invalid token.');
+                throw new ErrorHandler(INVALID_TOKEN.status_code, INVALID_TOKEN.custom_code, INVALID_TOKEN.msg);
             }
 
             req.current_user = tokenFromDb.user;
@@ -35,11 +38,13 @@ module.exports = {
             const { password, password_repeat } = req.body;
 
             if (!CONSTANTS.PASSWORD_REGEX.test(password)) {
-                throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, 'Passwords isn\'t valid.');
+                throw new ErrorHandler(PASSWORD_INVALID.status_code, PASSWORD_INVALID.custom_code, PASSWORD_INVALID.msg);
             }
 
             if (password !== password_repeat) {
-                throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, 'Passwords don\'t match.');
+                throw new ErrorHandler(
+                    PASSWORDS_DONT_MATCH.status_code, PASSWORDS_DONT_MATCH.custom_code, PASSWORDS_DONT_MATCH.msg
+                );
             }
 
             next();

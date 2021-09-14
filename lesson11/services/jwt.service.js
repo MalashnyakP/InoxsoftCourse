@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const { config, CONSTANTS, STATUS_CODES } = require('../configs');
+const { config, CONSTANTS, errors: { UNAUTHORIZED: { INVALID_TOKEN } } } = require('../configs');
 const ErrorHandler = require('../errors/ErrorsHandler');
 const { tokenUtils } = require('../utils');
 
@@ -24,7 +24,7 @@ module.exports = {
 
             jwt.verify(token, secretKey);
         } catch (e) {
-            throw new ErrorHandler(STATUS_CODES.UNA, 'Invalid token.');
+            throw new ErrorHandler(INVALID_TOKEN.status_code, INVALID_TOKEN.custom_code, INVALID_TOKEN.msg);
         }
     }
 };

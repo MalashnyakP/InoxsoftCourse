@@ -10,11 +10,11 @@ const {
 module.exports = {
     signUp: async (req, res, next) => {
         try {
-            const { avatar } = req.files;
-
             let user = await User.createUserWithHashPass(req.body);
 
-            if (avatar) {
+            if (req.files && req.files.avatar) {
+                const { avatar } = req.files;
+
                 const imgLocation = await s3Service.upload(avatar, 'user', user._id.toString());
 
                 user = await User.findByIdAndUpdate(user._id, { avatar: imgLocation }, { new: true });
@@ -23,7 +23,6 @@ module.exports = {
             const normalizedUser = userUtil.userNormalizator(user);
 
             emailService.sendEmail(normalizedUser.email, emailActionsEnum.WELCOME, { userName: normalizedUser.name });
-
             res.status(STATUS_CODES.CREATED).json(normalizedUser);
         } catch (e) {
             next(e);

@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 
 const ErrorHandler = require('../errors/ErrorsHandler');
-const { STATUS_CODES } = require('../configs');
+const { errors: { BAD_REQUEST: { LOG_IN } } } = require('../configs');
 
 module.exports = {
     hash: (password) => bcrypt.hash(password, 10),
@@ -10,7 +10,7 @@ module.exports = {
         const isPasswordMatches = await bcrypt.compare(password, hashPassword);
 
         if (!isPasswordMatches) {
-            throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, 'Email or password is wrong.');
+            throw new ErrorHandler(LOG_IN.status_code, LOG_IN.custom_code, LOG_IN.msg);
         }
     }
 };

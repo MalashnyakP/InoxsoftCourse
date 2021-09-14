@@ -1,4 +1,9 @@
-const { STATUS_CODES, USER_STATES, REQ_FIELDS_ENUM } = require('../configs');
+const {
+    errors: {
+        BAD_REQUEST: { VALIDATION }, CONFLICT: { USER_CONFLICT },
+        FORBIDDEN: { USER_ACTIVE, USER_FORBIDDEN }, NOT_FOUND: { USER_NF }
+    }, USER_STATES, REQ_FIELDS_ENUM
+} = require('../configs');
 const ErrorHandler = require('../errors/ErrorsHandler');
 const { User } = require('../dataBase');
 const { userValidator } = require('../validators');
@@ -13,7 +18,7 @@ module.exports = {
             }
 
             if (!roles.includes(role)) {
-                throw new ErrorHandler(STATUS_CODES.FORBIDDEN, 'This user role forbiden from this action.');
+                throw new ErrorHandler(USER_FORBIDDEN.status_code, USER_FORBIDDEN.custom_code, USER_FORBIDDEN.msg);
             }
 
             next();
@@ -27,7 +32,7 @@ module.exports = {
             const { error, value } = userValidator[validatorName].validate(req[dataIn]);
 
             if (error) {
-                throw new ErrorHandler(STATUS_CODES.BAD_REQUEST, error.details[0].message);
+                throw new ErrorHandler(VALIDATION.status_code, VALIDATION.custom_code, error.details[0].message);
             }
 
             req[dataIn] = value;
@@ -43,7 +48,7 @@ module.exports = {
             const { user } = req;
 
             if (user.state !== USER_STATES.ACTIVE) {
-                throw new ErrorHandler(STATUS_CODES.FORBIDDEN, 'User not active.');
+                throw new ErrorHandler(USER_ACTIVE.status_code, USER_ACTIVE.custom_code, USER_ACTIVE.msg);
             }
 
             next();
@@ -57,7 +62,7 @@ module.exports = {
             const { user } = req;
 
             if (!user) {
-                throw new ErrorHandler(STATUS_CODES.NOT_FOUND, 'No user found.');
+                throw new ErrorHandler(USER_NF.status_code, USER_NF.custom_code, USER_NF.msg);
             }
 
             next();
@@ -71,7 +76,7 @@ module.exports = {
             const { user } = req;
 
             if (user) {
-                throw new ErrorHandler(STATUS_CODES.CONFLICT, 'User with this email already exists.');
+                throw new ErrorHandler(USER_CONFLICT.status_code, USER_CONFLICT.custom_code, USER_CONFLICT.msg);
             }
 
             next();
