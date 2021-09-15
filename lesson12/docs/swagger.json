@@ -1,0 +1,365 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Inoxoft course documentation",
+        "version": "0.0.1",
+        "description": "Inoxoft Course Node.js"
+    },
+
+    "paths": {
+        "/cars": {
+          "get": {
+            "tags": [
+              "Cars"
+            ],
+            "description": "Get all cars filtered by query",
+            "operationId": "getAllCars",
+            "parameters": [
+              {
+                "name": "perPage",
+                "in": "query",
+                "description": "How many items will be showed in one page",
+                "required": false,
+                "default": 20,
+                "type": "number"
+              },
+              {
+                "name": "page",
+                "in": "query",
+                "description": "Page number",
+                "required": false,
+                "default": 1,
+                "type": "number"
+              },
+              {
+                "name": "sortBy",
+                "in": "query",
+                "description": "Field by which we sort our data",
+                "required": false,
+                "default": "createdAt",
+                "type": "string"
+              },
+              {
+                "name": "orderBy",
+                "in": "query",
+                "description": "How we order our data",
+                "required": false,
+                "default": "asc",
+                "type": "string"
+              },
+              {
+                "name": "yearGte",
+                "in": "query",
+                "description": "Lowest years cars will be",
+                "required": false,
+                "type": "number"                   
+            },
+            {
+                "name": "yearLte",
+                "in": "query",
+                "description": "Highest years cars will be",
+                "required": false,
+                "type": "number"                  
+            },
+            {
+                "name": "priceGte",
+                "in": "query",
+                "description": "Lowest price of cars",
+                "required": false,
+                "type": "number"                   
+            },
+            {
+                "name": "priceLte",
+                "in": "query",
+                "description": "Highest price of cars",
+                "required": false,
+                "type": "number"                   
+            }
+            ],
+            "responses": {
+              "200": {
+                "description": "Success",
+                "schema": {                  
+                    "$ref": "#/definitions/CarQueryResult"               
+                }
+              }
+            }
+          }
+        },
+
+        "/cars/{car_id}":{
+            "put": {
+                "tags": [
+                    "Cars"
+                ],
+                "description": "Update car by id",
+                "operationId": "updateCar",
+                "parameters": [
+                    {
+                        "name": "car_id",
+                        "in": "path",
+                        "description": "ID of car to update",
+                        "required": true,
+                        "default": "6129d2c398ab7cd28e62abaa",
+                        "type": "string"
+                    },
+                    {
+                        "name": "access_token",
+                        "in": "header",
+                        "description": "user access token",
+                        "required": true,
+                        "default": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MzE2NjE0MTIsImV4cCI6MTYzMTY2MjMxMn0.qWtIiwCtbeWYF0C211GqSTkElSmpzrimIk3FmtlQ2Cg",
+                        "type": "string"
+                    },
+                    {
+                        "name": "brand",
+                        "in": "body",
+                        "description": "car brand to put",
+                        "required": false,
+                        "default": "Mazda",
+                        "type": "string"
+                    },
+                    {
+                        "name": "model",
+                        "in": "body",
+                        "description": "car model to put",
+                        "required": false,
+                        "default": "RX8",
+                        "type": "string"
+                    },
+                    {
+                        "name": "year",
+                        "in": "body",
+                        "description": "car year to put",
+                        "required": false,
+                        "default": 2010,
+                        "type": "number"
+                    },
+                    {
+                        "name": "price",
+                        "in": "body",
+                        "description": "car price to put",
+                        "required": false,
+                        "default": 15000,
+                        "type": "number"
+                    }
+                ],
+                "responses": { 
+                    "200": {
+                        "description": "Success",
+                        "schema": {                  
+                            "$ref": "#/definitions/Car"               
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid data",
+                        "schema": {                  
+                            "$ref": "#/definitions/ErrorHandler"               
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {                  
+                            "$ref": "#/definitions/ErrorHandler"               
+                        }
+                    }
+                }                
+            }
+        },
+
+        "/signup": {
+            "post": {
+                "tags": [
+                    "Users"
+                  ],
+                  "description": "Create user",
+                  "operationId": "createUser",
+                  "parameters": [                      
+                    {
+                        "name": "name",
+                        "in": "body",
+                        "description": "User name",
+                        "required": true,
+                        "default": "Oleg",
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "body",
+                        "description": "page number",
+                        "required": true,
+                        "default": "test@test.com",
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "body",
+                        "description": "page number",
+                        "required": true,
+                        "default": "Test123!",
+                        "type": "string"
+                    },
+                    {
+                        "name": "avatar",
+                        "in": "body",
+                        "description": "user avatar",
+                        "type": "file"                  
+                    }                      
+                  ],
+                  "responses": {
+                      "200": {
+                        "description": "Success",
+                        "schema": {
+                          "$ref": "#/definitions/User"
+                        }
+                      },
+                      "400": {
+                          "description": "Invalid data",
+                          "schema": {
+                            "$ref": "#/definitions/ErrorHandler"
+                          }
+                      },
+                      "409": {
+                        "description": "User with such email already registered",
+                        "schema": {
+                          "$ref": "#/definitions/ErrorHandler"
+                        }
+                    }
+                  }
+            }
+        }
+      },
+
+    "definitions": {
+        "User": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "description": "user ID",
+                "type": "string",
+                "example": "61393908058bb6655bc472b3"
+              },
+              "name": {
+                "description": "user name",
+                "type": "string",
+                "example": "Anton"
+              },
+              "email": {
+                "description": "user email",
+                "type": "string",
+                "example": "test@gmail.com"
+              },
+              "role": {
+                "description": "user role",
+                "type": "string",
+                "enum": [
+                    "admin",
+                    "user"
+                ],
+                "example": "user"
+              },
+              "state": {
+                "description": "user state",
+                "type": "string",
+                "enum": [
+                    "active",
+                    "inactive"
+                ],
+                "example": "active"
+              }
+            }
+        },
+
+          "Car": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "description": "car ID",
+                "type": "string",
+                "example": "61393908058bb6655bc472b3"
+              },
+              "brand": {
+                "description": "car brand",
+                "type": "string",
+                "example": "BMW"
+              },
+              "model": {
+                "description": "car model",
+                "type": "string",
+                "example": "ix3"
+              },
+              "price": {
+                "description": "car price",
+                "type": "number",
+                "example": 60000
+              },
+              "year": {
+                "description": "year when car was manufactured",
+                "type": "number",       
+                "example": 2020
+              },
+              "user": {
+                  "$ref": "#/definitions/User"
+              }
+            }
+        },
+
+        "CarQueryResult": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "description": "All cars found by query",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Car"
+                    }
+                },
+                "perPage": {
+                    "description": "Max number of cars per page",
+                    "type":"number",
+                    "example": 20
+                },
+                "page": {
+                    "description": "Starting page",
+                    "type":"number",
+                    "example": 1
+                },
+                "countDocuments": {
+                    "description": "Number of cars found",
+                    "type":"number",
+                    "example": 100
+                },
+                "maxPages": {
+                    "description": "Max number of pages with found cars ",
+                    "type":"number",
+                    "example": 5
+                }
+                
+            }
+        },
+
+        "ErrorHandler": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "number",
+                    "description": "Errors status code",
+                    "example": 404
+                },
+                "customCode": {
+                    "type": "string",
+                    "description": "Errors custom status code",
+                    "example": "404.1"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Errors message",
+                    "example": "Wrong email or password"
+                },
+                "data": {
+                    "type": "object"
+                }
+            }
+        }
+    }
+}
