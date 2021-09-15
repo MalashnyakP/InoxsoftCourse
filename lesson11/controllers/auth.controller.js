@@ -1,7 +1,7 @@
 const {
     STATUS_CODES, config, CONSTANTS, databaseTableEnum, emailActionsEnum, USER_STATES
 } = require('../configs');
-const { ActionToken, OAuth, User } = require('../dataBase');
+const { ActionToken, OAuth, User } = require('../models');
 const { userUtil } = require('../utils');
 const {
     authService, emailService, jwtService, passwordService, s3Service

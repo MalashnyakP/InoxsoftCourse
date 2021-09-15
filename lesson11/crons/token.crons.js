@@ -3,7 +3,7 @@ const utc = require('dayjs/plugin/utc');
 
 dayjs.extend(utc);
 
-const { ActionToken, OAuth } = require('../dataBase');
+const { ActionToken, OAuth } = require('../models');
 
 module.exports = {
     removeOldTokens: async () => {

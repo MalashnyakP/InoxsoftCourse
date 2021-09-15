@@ -1,4 +1,4 @@
-const { OAuth } = require('../dataBase');
+const { OAuth } = require('../models');
 const { databaseTableEnum } = require('../configs');
 
 module.exports = {

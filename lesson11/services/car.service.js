@@ -1,4 +1,4 @@
-const { Car } = require('../dataBase');
+const { Car } = require('../models');
 
 module.exports = {
     carSearchQuery: async (query) => {

@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 
 const { config, errors: { BAD_REQUEST: { WRONG_TEMPLATE } } } = require('../configs');
-const ErrorHandler = require('../errors/ErrorsHandler');
+const { ErrorHandler } = require('../errors');
 const templates = require('../email-templates');
 
 const templateParser = new EmailTemplates({

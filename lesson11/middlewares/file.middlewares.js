@@ -1,4 +1,4 @@
-const ErrorHandler = require('../errors/ErrorsHandler');
+const { ErrorHandler } = require('../errors');
 const { CONSTANTS, errors: { BAD_REQUEST: { WRONG_FILE_FORMAT, FILE_SIZE } } } = require('../configs');
 
 module.exports = {

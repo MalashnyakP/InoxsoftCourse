@@ -1,6 +1,6 @@
-const { Car } = require('../dataBase');
+const { Car } = require('../models');
 const { carValidator } = require('../validators');
-const ErrorHandler = require('../errors/ErrorsHandler');
+const { ErrorHandler } = require('../errors');
 const {
     errors: {
         BAD_REQUEST: { NOT_OWNED_BY_USER, VALIDATION },

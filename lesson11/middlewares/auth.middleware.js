@@ -1,10 +1,10 @@
 const {
     CONSTANTS, databaseTableEnum,
-    errors: { BAD_REQUEST: { PASSWORDS_DONT_MATCH, PASSWORD_INVALID }, UNAUTHORIZED: { INVALID_TOKEN } }
+    errors: { BAD_REQUEST: { PASSWORDS_DONT_MATCH }, UNAUTHORIZED: { INVALID_TOKEN } }
 } = require('../configs');
-const ErrorHandler = require('../errors/ErrorsHandler');
+const { ErrorHandler } = require('../errors');
 const { jwtService, passwordService } = require('../services');
-const { OAuth } = require('../dataBase');
+const { OAuth } = require('../models');
 
 module.exports = {
     checkToken: (tokenType = CONSTANTS.ACCESS, tokenDB = OAuth) => async (req, res, next) => {
@@ -37,10 +37,6 @@ module.exports = {
         try {
             const { password, password_repeat } = req.body;
 
-            if (!CONSTANTS.PASSWORD_REGEX.test(password)) {
-                throw new ErrorHandler(PASSWORD_INVALID.status_code, PASSWORD_INVALID.custom_code, PASSWORD_INVALID.msg);
-            }
-
             if (password !== password_repeat) {
                 throw new ErrorHandler(
                     PASSWORDS_DONT_MATCH.status_code, PASSWORDS_DONT_MATCH.custom_code, PASSWORDS_DONT_MATCH.msg
@@ -57,7 +53,7 @@ module.exports = {
         try {
             const { current_user, body: { password } } = req;
 
-            await passwordService.compare(password, current_user.password);
+            await passwordService.compareNewToOld(password, current_user.password);
 
             req.password = await passwordService.hash(password);
 

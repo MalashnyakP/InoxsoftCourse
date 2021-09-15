@@ -4,8 +4,8 @@ const {
         FORBIDDEN: { USER_ACTIVE, USER_FORBIDDEN }, NOT_FOUND: { USER_NF }
     }, USER_STATES, REQ_FIELDS_ENUM
 } = require('../configs');
-const ErrorHandler = require('../errors/ErrorsHandler');
-const { User } = require('../dataBase');
+const { ErrorHandler } = require('../errors');
+const { User } = require('../models');
 const { userValidator } = require('../validators');
 
 module.exports = {

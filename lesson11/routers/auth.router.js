@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 const { CONSTANTS, VALIDATORS_ENUM, USER_ROLE } = require('../configs');
 const { authController } = require('../controllers');
-const { ActionToken } = require('../dataBase');
+const { ActionToken } = require('../models');
 const { authMiddleware, fileMiddleware, userMiddleware } = require('../middlewares');
 
 router.post('/signup',
@@ -38,6 +38,7 @@ router.post('/auth/begin_pass_reset',
     authController.beginResetPassword);
 
 router.post('/auth/reset_pass',
+    userMiddleware.validateDataDynamic(VALIDATORS_ENUM.USER_PASSWORD),
     authMiddleware.checkToken(CONSTANTS.ACTION, ActionToken),
     authMiddleware.isPasswordsIdentical,
     authMiddleware.isNewPassSameAsOld,

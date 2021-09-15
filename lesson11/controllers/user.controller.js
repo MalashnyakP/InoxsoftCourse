@@ -1,6 +1,6 @@
 const { emailService } = require('../services');
 const { emailActionsEnum } = require('../configs');
-const { User } = require('../dataBase');
+const { User } = require('../models');
 const { userUtil } = require('../utils');
 
 module.exports = {

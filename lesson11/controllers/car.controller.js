@@ -1,4 +1,4 @@
-const { Car } = require('../dataBase');
+const { Car } = require('../models');
 const { carService: { carSearchQuery } } = require('../services');
 
 module.exports = {

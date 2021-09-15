@@ -1,4 +1,5 @@
 const Joi = require('joi');
+
 const { CONSTANTS, USER_ROLE, USER_STATES } = require('../configs');
 
 const createUserValidator = Joi.object({
@@ -116,11 +117,27 @@ const userEmailValidator = Joi.object({
         .required()
 });
 
+const userPasswordValidator = Joi.object({
+    password: Joi
+        .string()
+        .min(8).max(128)
+        .trim()
+        .regex(CONSTANTS.PASSWORD_REGEX)
+        .required(),
+
+    password_repeat: Joi
+        .string()
+        .min(8).max(128)
+        .trim()
+        .regex(CONSTANTS.PASSWORD_REGEX)
+});
+
 module.exports = {
     createUserValidator,
     logInUserValidator,
+    setUserDataValidator,
     updateUserValidator,
+    userPasswordValidator,
     userIdValidator,
-    userEmailValidator,
-    setUserDataValidator
+    userEmailValidator
 };

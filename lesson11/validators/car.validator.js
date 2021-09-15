@@ -1,4 +1,5 @@
 const Joi = require('joi');
+
 const { CONSTANTS } = require('../configs');
 
 const createCarValidator = Joi.object({

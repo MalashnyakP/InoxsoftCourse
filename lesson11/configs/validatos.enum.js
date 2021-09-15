@@ -4,6 +4,7 @@ module.exports = {
     UPDATE_USER: 'updateUserValidator',
     USER_ID: 'userIdValidator',
     USER_EMAIL: 'userEmailValidator',
+    USER_PASSWORD: 'userPasswordValidator',
     SET_USER_DATA: 'setUserDataValidator',
 
     CAR_ID: 'carIdValidator',

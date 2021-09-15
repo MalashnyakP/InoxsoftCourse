@@ -26,8 +26,8 @@ module.exports = {
             custom_code: '400.3'
         },
 
-        PASSWORD_INVALID: {
-            msg: 'Passwords isn\'t valid.',
+        PASSWORD_SAME_AS_OLD_ONE: {
+            msg: 'Password same as old one.',
             status_code: statusCodes.BAD_REQUEST,
             custom_code: '400.2'
         },
