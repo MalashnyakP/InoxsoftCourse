@@ -1,4 +1,4 @@
-const { emailService } = require('../services');
+const { emailService, userService } = require('../services');
 const { emailActionsEnum } = require('../configs');
 const { User } = require('../models');
 const { userUtil } = require('../utils');
@@ -20,7 +20,7 @@ module.exports = {
 
     getAllUsers: async (req, res, next) => {
         try {
-            const users = await User.find({}).select('-password -__v');
+            const users = await userService.userSearchQuery(req.query);
 
             res.json(users);
         } catch (e) {
